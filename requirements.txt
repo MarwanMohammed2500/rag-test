@@ -1,0 +1,24 @@
+# RAG Library
+langchain==0.3.27                    # Core LangChain library
+langchain-core==0.3.72               # LangChain core components
+langchain-openai==0.3.28             # OpenAI integration for LangChain
+langchain-community==0.3.27          # Community-contributed LangChain tools
+langchain-experimental==0.3.4        # Experimental LangChain features
+langchain-google-genai==2.1.8       # Google GenAI integration
+pydantic==2.11.7                      # Data validation (required by FastAPI, LangChain)
+
+# Vector Database (Pinecone)
+pinecone==7.0.2
+pinecone-client==2.2.4
+langchain-pinecone==0.2.11       # LangChain integration for Pinecone
+
+# Data Loader & Transcript
+pypdf
+docx2txt
+bs4
+
+# Frontend
+streamlit
+
+# Load Env
+python-dotenv
