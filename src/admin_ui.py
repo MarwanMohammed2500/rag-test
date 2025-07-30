@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from utils.Load_data import loading_data
-from utils.Vector_db import add_documents_to_pinecone
+from utils.Vector_db import add_documents_to_pinecone, delete_vectors_by_source
 
 def main():
     st.set_page_config(layout="wide", page_icon="🤖", page_title="Admin RAG UI")
@@ -53,7 +53,22 @@ def main():
                 
         else: 
             st.warning("⚠️ Please upload files or enter a YouTube URL.")
-    
+            
+        
+    st.markdown("### `🔥 Delete Vectors by Document Name`")
+    with st.form("delete_form"):
+        doc_name = st.text_input("Enter the document `source` name (exact match)", placeholder="example.pdf")
+        submitted = st.form_submit_button("Delete from Vector DB")
+
+        if submitted:
+            if doc_name.strip():
+                with st.spinner(f"Deleting vectors for `{doc_name}`..."):
+                    delete_vectors_by_source(doc_name)
+                st.success(f"✅ Vectors with source `{doc_name}` deleted successfully.")
+            else:
+                st.warning("⚠️ Please enter a valid document name.")
+        
+        
     st.sidebar.markdown("---")
     st.sidebar.markdown("Created by [Osama Abo-Bakr](https://osama-abo-bakr.vercel.app/) with ❤️")
     

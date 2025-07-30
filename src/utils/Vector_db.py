@@ -89,3 +89,29 @@ def add_documents_to_pinecone(index_name: str='non-profit-rag', vect_length: int
         logger.info("✅ Successfully added new documents to Pinecone.")
     except Exception as e:
         logger.error("❌ An error occurred while adding new documents to Pinecone.", exc_info=True)
+
+
+def delete_vectors_by_source(source_name: str, namespace='__default__'):
+    pinecone = Pinecone(api_key=os.getenv('PINECONE_API_KEY', ""))
+    index = pinecone.Index("non-profit-rag")
+    
+    logger.info(f"❌ Deleting vectors with source = '{source_name}'...")
+    all_ids = [i for ids in index.list(namespace=namespace) for i in ids]
+    batch_size = 100
+    matching_ids = []
+
+    for i in range(0, len(all_ids), batch_size):
+        batch_ids = all_ids[i:i+batch_size]
+        fetched = index.fetch(ids=batch_ids, namespace=namespace)
+        for vec_id, data in fetched.vectors.items():
+            metadata = data.metadata
+            if metadata.get("source") == source_name:
+                matching_ids.append(vec_id)
+
+    print(f"✅ Found {len(matching_ids)} vectors to delete.")
+
+    if matching_ids:
+        index.delete(ids=matching_ids, namespace=namespace)
+        print("💥 Deletion complete.")
+    else:
+        print("No vectors found with that source.")
